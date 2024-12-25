@@ -1,4 +1,4 @@
-package kr.co.kcs.cims;
+package kr.co.kcs.cims.sample;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;

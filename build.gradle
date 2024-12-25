@@ -36,12 +36,13 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-tasks.named('test') {
+test {
 	useJUnitPlatform()
+	exclude '**/integrationtest/**'
 }
 
 // Git hooks 설치를 위한 task 정의
-task installGitHooks(type: Copy) {
+tasks.register('installGitHooks', Copy) {
 	from new File(rootProject.rootDir, 'gradle/githooks/pre-commit')
 	into { new File(rootProject.rootDir, '.git/hooks') }
 	fileMode 0755 // 실행 권한 부여
@@ -81,3 +82,29 @@ spotless {
 	}
 }
 
+tasks.register('integrationTest', Test) {
+	testClassesDirs = sourceSets.integrationTest.output.classesDirs
+	classpath = sourceSets.integrationTest.runtimeClasspath
+
+	useJUnitPlatform()
+}
+
+sourceSets {
+	integrationTest {
+		compileClasspath += sourceSets.main.output
+		runtimeClasspath += sourceSets.main.output
+
+		java {
+			srcDirs = ['src/integrationTest/java']
+		}
+		resources {
+			srcDirs = ['src/integrationTest/resources']
+		}
+	}
+}
+
+configurations {
+	// integrationTest 소스 세트가 main, test 소스 세트의 의존성을 포함하도록 설정
+	integrationTestImplementation.extendsFrom implementation, testImplementation
+	integrationTestRuntimeOnly.extendsFrom runtimeOnly, testRuntimeOnly
+}

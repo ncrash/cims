@@ -1,4 +1,4 @@
-package kr.co.kcs.cims;
+package kr.co.kcs.cims.sample;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
