@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.1'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'com.diffplug.spotless' version '6.25.0'
 }
 
 group = 'kr.co.kcs'
@@ -38,3 +39,44 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// Git hooks 설치를 위한 task 정의
+task installGitHooks(type: Copy) {
+	from new File(rootProject.rootDir, 'gradle/githooks/pre-commit')
+	into { new File(rootProject.rootDir, '.git/hooks') }
+	fileMode 0755 // 실행 권한 부여
+}
+
+// build task 실행 전에 항상 hook 설치
+tasks.getByPath(':build').dependsOn installGitHooks
+
+spotless {
+	// 변경된 파일만 검사하도록 설정하여 속도 향상
+	ratchetFrom 'origin/main'
+
+	format 'misc', {
+		// 불필요한 공백 제거
+		target '.gitattributes', '.gitignore'
+		trimTrailingWhitespace()
+		indentWithSpaces(4)
+		endWithNewline()
+	}
+
+	java {
+		// 캐시 활성화로 증분 포맷팅 지원
+		toggleOffOn()
+
+		// Google Java Format 사용
+		googleJavaFormat('1.17.0')
+
+		// 특정 파일 제외
+		targetExclude 'build/**', '.gradle/**'
+
+		// 불필요한 import 정리
+		removeUnusedImports()
+
+		// 정렬 규칙
+		importOrder('java', 'javax', 'org', 'com', '')
+	}
+}
+
