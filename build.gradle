@@ -66,8 +66,9 @@ spotless {
 		// 캐시 활성화로 증분 포맷팅 지원
 		toggleOffOn()
 
-		// Google Java Format 사용
-		googleJavaFormat('1.17.0')
+		// Palantir Java Format 사용
+		// https://github.com/palantir/palantir-java-format
+		palantirJavaFormat('2.50.0')
 
 		// 특정 파일 제외
 		targetExclude 'build/**', '.gradle/**'
