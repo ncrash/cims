@@ -1,13 +1,11 @@
-drop table if exists customers;
-
-create table customers
+CREATE TABLE customers
 (
-    birth_date   date,
-    credit_grade tinyint check (credit_grade between 0 and 9),
-    last_updated date,
-    id           bigint not null auto_increment,
-    email        varchar(255),
-    name         varchar(255),
-    phone_number varchar(255),
-    primary key (id)
-) engine = InnoDB
+    id           BIGINT AUTO_INCREMENT NOT NULL,
+    credit_grade VARCHAR(4)            NULL,
+    last_updated date                  NULL,
+    name         VARCHAR(50)           NOT NULL,
+    birth_date   date                  NOT NULL,
+    email        VARCHAR(100)          NOT NULL,
+    phone_number VARCHAR(20)           NOT NULL,
+    CONSTRAINT pk_customers PRIMARY KEY (id)
+);
