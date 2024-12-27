@@ -13,10 +13,23 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // Swagger UI 관련 경로
+        String[] swaggerPaths = {
+            "/v3/api-docs/**", "/swagger-ui/**", "/swagger-resources/**", "/swagger-ui.html", "/webjars/**"
+        };
+
+        // 공개 API 경로
+        String[] publicApiPaths = {"/api/hello", "/hello"};
+
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/hello")
+                        // Swagger UI 경로 허용
+                        .requestMatchers(swaggerPaths)
                         .permitAll()
+                        // 공개 API 경로 허용
+                        .requestMatchers(publicApiPaths)
+                        .permitAll()
+                        // 나머지 요청은 인증 필요
                         .anyRequest()
                         .authenticated())
                 .formLogin(withDefaults());
