@@ -24,5 +24,13 @@ CREATE TABLE customers
     CONSTRAINT pk_customers PRIMARY KEY (id)
 );
 
+CREATE INDEX idx_created_at ON credit_transactions (created_at);
+
+CREATE INDEX idx_credit_grade ON customers (credit_grade);
+
+CREATE INDEX idx_credit_grade_updated_at ON customers (credit_grade_updated_at);
+
+CREATE INDEX idx_status ON credit_transactions (status);
+
 ALTER TABLE credit_transactions
     ADD CONSTRAINT FK_CREDIT_TRANSACTIONS_ON_CUSTOMER FOREIGN KEY (customer_id) REFERENCES customers (id);

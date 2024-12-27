@@ -4,20 +4,10 @@ public enum RepaymentStatus {
     /**
      * 상환이 성공적으로 완료됨.
      */
-    SUCCESS,
+    COMPLETE,
 
     /**
-     * 상환이 실패함.
+     * 상환이 연체됨
      */
-    FAILED,
-
-    /**
-     * 상환이 아직 처리되지 않은 상태.
-     */
-    PENDING,
-
-    /**
-     * 상환이 일부만 이루어진 상태.
-     */
-    PARTIALLY_PAID
+    OVERDUE,
 }

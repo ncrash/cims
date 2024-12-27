@@ -11,7 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import kr.co.kcs.cims.domain.common.AbstractEntity;
@@ -19,7 +19,12 @@ import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "customers")
+@Table(
+        name = "customers",
+        indexes = {
+            @Index(name = "idx_credit_grade", columnList = "creditGrade"),
+            @Index(name = "idx_credit_grade_updated_at", columnList = "creditGradeUpdatedAt")
+        })
 public class Customer extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +33,7 @@ public class Customer extends AbstractEntity {
     @Embedded
     private PersonalInfo personalInfo;
 
-    @OneToMany
-    @JoinColumn(name = "customer_id")
+    @OneToMany(mappedBy = "customer")
     private List<CreditTransaction> creditTransactions;
 
     @Enumerated(EnumType.STRING)
