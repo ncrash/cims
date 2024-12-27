@@ -1,0 +1,74 @@
+name: Java CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout 코드
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Java 설정 (JDK 21 사용)
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # 3. 프로젝트 의존성 설치
+      - name: Install dependencies
+        run: ./gradlew dependencies
+
+      # 4. 테스트 실행
+      - name: Run tests
+        run: ./gradlew test
+
+      # 5. 테스트 결과 보고
+      - name: Archive Test Reports
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: build/reports/tests/test/
+
+      # 6. 실패 시 Slack 알림
+      - name: Notify Slack on Failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1.23.0
+        with:
+          payload: |
+            {
+              "channel": "#red-alert",
+              "attachments": [
+                {
+                  "color": "danger",
+                  "pretext": "Test Failure Alert 🚨",
+                  "title": "GitHub Actions Build Failed",
+                  "title_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                  "text": "The test suite failed for commit ${{ github.sha }} by ${{ github.actor }}.",
+                  "fields": [
+                    {
+                      "title": "Repository",
+                      "value": "${{ github.repository }}",
+                      "short": true
+                    },
+                    {
+                      "title": "Branch",
+                      "value": "${{ github.ref_name }}",
+                      "short": true
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
