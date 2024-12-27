@@ -1,4 +1,4 @@
-package kr.co.kcs.cims.domain.customer.customer;
+package kr.co.kcs.cims.domain.customer.enums;
 
 public enum TransactionType {
     LOAN,

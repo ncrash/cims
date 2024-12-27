@@ -1,13 +1,16 @@
-package kr.co.kcs.cims.domain.customer.customer;
+package kr.co.kcs.cims.domain.customer.entity;
 
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Embeddable
+@NoArgsConstructor
 public class PersonalInfo {
     @Column(length = 50, nullable = false)
     private String name;
@@ -20,4 +23,12 @@ public class PersonalInfo {
 
     @Column(length = 20, nullable = false)
     private String phoneNumber;
+
+    @Builder
+    public PersonalInfo(LocalDate birthDate, String email, String phoneNumber, String name) {
+        this.birthDate = birthDate;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.name = name;
+    }
 }
