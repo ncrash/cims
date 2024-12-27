@@ -22,6 +22,7 @@ import kr.co.kcs.cims.domain.common.AbstractEntity;
 import kr.co.kcs.cims.domain.customer.enums.RepaymentStatus;
 import kr.co.kcs.cims.domain.customer.enums.TransactionType;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @Entity
@@ -32,6 +33,7 @@ import lombok.Getter;
             @Index(name = "idx_created_at", columnList = "createdAt")
         })
 @SQLDelete(sql = "UPDATE credit_transactions SET deleted = true, deleted_at = NOW() WHERE id = ? AND deleted = false")
+@ToString(exclude = "customer", callSuper = true)
 public class CreditTransaction extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

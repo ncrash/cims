@@ -1,8 +1,10 @@
 package kr.co.kcs.cims.domain.common;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.proxy.HibernateProxy;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
@@ -17,6 +19,8 @@ import lombok.Getter;
 @MappedSuperclass
 @SQLRestriction("deleted = false")
 public abstract class AbstractEntity {
+
+    public abstract Long getId();
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -49,5 +53,35 @@ public abstract class AbstractEntity {
     public void onRemove() {
         this.deleted = true;
         this.deletedAt = LocalDateTime.now();
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy
+                ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass()
+                : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy
+                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
+                : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        AbstractEntity that = (AbstractEntity) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy
+                ? ((HibernateProxy) this)
+                        .getHibernateLazyInitializer()
+                        .getPersistentClass()
+                        .hashCode()
+                : getClass().hashCode();
+    }
+
+    @Override
+    protected final Object clone() throws CloneNotSupportedException {
+        throw new CloneNotSupportedException();
     }
 }

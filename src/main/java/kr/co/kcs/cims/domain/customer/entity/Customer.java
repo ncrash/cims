@@ -22,6 +22,7 @@ import kr.co.kcs.cims.domain.customer.enums.CreditGrade;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @Entity
@@ -33,6 +34,7 @@ import lombok.NoArgsConstructor;
         })
 @NoArgsConstructor
 @SQLDelete(sql = "UPDATE customers SET deleted = true, deleted_at = NOW() WHERE id = ? AND deleted = false")
+@ToString(exclude = "creditTransactions", callSuper = true)
 public class Customer extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
