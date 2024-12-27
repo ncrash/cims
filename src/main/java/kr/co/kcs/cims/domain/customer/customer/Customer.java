@@ -1,4 +1,4 @@
-package kr.co.kcs.cims.customer;
+package kr.co.kcs.cims.domain.customer.customer;
 
 import java.time.LocalDateTime;
 import java.util.List;

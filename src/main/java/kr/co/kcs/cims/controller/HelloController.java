@@ -1,4 +1,4 @@
-package kr.co.kcs.cims.web;
+package kr.co.kcs.cims.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

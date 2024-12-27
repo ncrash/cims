@@ -1,4 +1,4 @@
-package kr.co.kcs.cims.configuration;
+package kr.co.kcs.cims.config;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 

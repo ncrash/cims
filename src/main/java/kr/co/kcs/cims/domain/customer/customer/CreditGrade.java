@@ -1,4 +1,4 @@
-package kr.co.kcs.cims.customer;
+package kr.co.kcs.cims.domain.customer.customer;
 
 public enum CreditGrade {
     GRADE_001,
