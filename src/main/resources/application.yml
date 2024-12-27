@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: cims
+  
+  # Database Common Configuration
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/kcs?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    username: kcs
+    password: password!@#$
+  
+  # JPA Common Configuration
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: default    # 명시적 지정 없을 때 적용되는 프로필
+
+  # Development Environment (db.t4g.medium - 2vCPU, 4GiB)
+  datasource:
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 10
+      idle-timeout: 300000
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  # Production Environment (db.r6g.xlarge - 4vCPU, 32GiB)
+  datasource:
+    hikari:
+      maximum-pool-size: 50
+      minimum-idle: 20
+      idle-timeout: 600000
