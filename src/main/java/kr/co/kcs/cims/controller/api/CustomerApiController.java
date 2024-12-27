@@ -1,5 +1,7 @@
 package kr.co.kcs.cims.controller.api;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +20,11 @@ public class CustomerApiController {
 
     private final CustomerService customerService;
 
-    //    @Operation(summary = "고객 목록 조회", description = "페이징된 고객 목록을 조회합니다.")
-    //    @GetMapping
-    //    public ResponseEntity<Page<CustomerDto>> getCustomers(Pageable pageable) {
-    //        return ResponseEntity.ok(customerService.findAll(pageable));
-    //    }
+    @Operation(summary = "고객 목록 조회", description = "페이징된 고객 목록을 조회합니다.")
+    @GetMapping
+    public ResponseEntity<Page<CustomerDto>> getCustomers(Pageable pageable) {
+        return ResponseEntity.ok(customerService.findCustomers(pageable));
+    }
 
     @Operation(summary = "고객 상세 조회", description = "고객 ID로 상세 정보를 조회합니다.")
     @GetMapping("/{id}")

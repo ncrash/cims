@@ -1,5 +1,7 @@
 package kr.co.kcs.cims.domain.customer.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,11 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class CustomerService {
     private final CustomerRepository customerRepository;
+
+    public Page<CustomerDto> findCustomers(Pageable pageable) {
+        Page<Customer> customers = customerRepository.findAll(pageable);
+        return customers.map(CustomerDto::from);
+    }
 
     public CustomerDto findCustomerId(Long id) {
         Customer customer = getCustomer(id);
