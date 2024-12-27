@@ -3,6 +3,8 @@ package kr.co.kcs.cims.domain.customer.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.SQLDelete;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,6 +31,7 @@ import lombok.Getter;
             @Index(name = "idx_status", columnList = "status"),
             @Index(name = "idx_created_at", columnList = "createdAt")
         })
+@SQLDelete(sql = "UPDATE credit_transactions SET deleted = true, deleted_at = NOW() WHERE id = ? AND deleted = false")
 public class CreditTransaction extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
