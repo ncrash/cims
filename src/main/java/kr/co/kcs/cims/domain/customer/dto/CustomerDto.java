@@ -30,12 +30,14 @@ public record CustomerDto(
         int creditGrade,
         LocalDateTime creditGradeUpdatedAt)
         implements Serializable {
+
     /**
      * DTO for {@link PersonalInfo}
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record PersonalInfoDto(String name, LocalDate birthDate, String email, String phoneNumber)
             implements Serializable {
+
         public static PersonalInfoDto from(Customer customer) {
             return new PersonalInfoDto(
                     customer.getPersonalInfo().getName(),
@@ -43,6 +45,22 @@ public record CustomerDto(
                     customer.getPersonalInfo().getEmail(),
                     customer.getPersonalInfo().getPhoneNumber());
         }
+    }
+
+    // DTO <- Customer
+    public static CustomerDto from(Customer customer) {
+        List<CreditTransactionDto> creditTransactionDtoList = customer.getCreditTransactions().stream()
+                .map(CreditTransactionDto::from)
+                .toList();
+
+        return new CustomerDto(
+                customer.getId(),
+                customer.getCreatedAt(),
+                customer.getUpdatedAt(),
+                PersonalInfoDto.from(customer),
+                creditTransactionDtoList,
+                customer.getCreditGrade(),
+                customer.getCreditGradeUpdatedAt());
     }
 
     public record Request(
@@ -73,21 +91,5 @@ public record CustomerDto(
                     .creditGradeUpdatedAt(LocalDateTime.now())
                     .build();
         }
-    }
-
-    // DTO <- Customer
-    public static CustomerDto from(Customer customer) {
-        List<CreditTransactionDto> creditTransactionDtoList = customer.getCreditTransactions().stream()
-                .map(CreditTransactionDto::from)
-                .toList();
-
-        return new CustomerDto(
-                customer.getId(),
-                customer.getCreatedAt(),
-                customer.getUpdatedAt(),
-                PersonalInfoDto.from(customer),
-                creditTransactionDtoList,
-                customer.getCreditGrade(),
-                customer.getCreditGradeUpdatedAt());
     }
 }
