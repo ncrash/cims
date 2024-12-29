@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.kcs.cims.domain.common.PageResponseDto;
 import kr.co.kcs.cims.domain.customer.dto.CreditTransactionDto;
+import kr.co.kcs.cims.domain.customer.dto.CreditTransactionRequestDto;
 import kr.co.kcs.cims.domain.customer.enums.RepaymentStatus;
 import kr.co.kcs.cims.domain.customer.service.CreditTransactionService;
 import kr.co.kcs.cims.domain.customer.service.CustomerCreditFacade;
@@ -47,7 +48,7 @@ public class CreditTransactionApiController {
     @Operation(summary = "신용거래 등록", description = "새로운 신용거래를 등록합니다.")
     @PostMapping
     public ResponseEntity<CreditTransactionDto> createTransaction(
-            @Valid @RequestBody CreditTransactionDto.CreditRequest creditRequest) {
+            @Valid @RequestBody CreditTransactionRequestDto creditRequest) {
         try {
             CreditTransactionDto result = customerCreditFacade.createTransaction(creditRequest);
             return ResponseEntity.ok(result);

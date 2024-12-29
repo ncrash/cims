@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
 import kr.co.kcs.cims.domain.customer.dto.CustomerDto;
+import kr.co.kcs.cims.domain.customer.dto.CustomerRequestDto;
 import kr.co.kcs.cims.domain.customer.entity.Customer;
 import kr.co.kcs.cims.domain.customer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +29,14 @@ public class CustomerService {
     }
 
     @Transactional
-    public CustomerDto createCustomer(CustomerDto.Request request) {
+    public CustomerDto createCustomer(CustomerRequestDto request) {
         Customer customer = request.toEntity();
         Customer savedCustomer = customerRepository.save(customer);
         return CustomerDto.from(savedCustomer);
     }
 
     @Transactional
-    public CustomerDto updateCustomer(Long id, CustomerDto.Request request) {
+    public CustomerDto updateCustomer(Long id, CustomerRequestDto request) {
         Customer customer = getCustomer(id);
         Customer updateRequestEntity = request.toEntity();
 

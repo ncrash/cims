@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.kcs.cims.domain.customer.dto.CustomerDto;
+import kr.co.kcs.cims.domain.customer.dto.CustomerRequestDto;
 import kr.co.kcs.cims.domain.customer.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 
@@ -34,14 +35,14 @@ public class CustomerApiController {
 
     @Operation(summary = "고객 등록", description = "새로운 고객을 등록합니다.")
     @PostMapping
-    public ResponseEntity<CustomerDto> createCustomer(@Valid @RequestBody CustomerDto.Request request) {
+    public ResponseEntity<CustomerDto> createCustomer(@Valid @RequestBody CustomerRequestDto request) {
         return ResponseEntity.ok(customerService.createCustomer(request));
     }
 
     @Operation(summary = "고객 정보 수정", description = "기존 고객의 정보를 수정합니다.")
     @PutMapping("/{id}")
     public ResponseEntity<CustomerDto> updateCustomer(
-            @PathVariable Long id, @Valid @RequestBody CustomerDto.Request request) {
+            @PathVariable Long id, @Valid @RequestBody CustomerRequestDto request) {
         return ResponseEntity.ok(customerService.updateCustomer(id, request));
     }
 

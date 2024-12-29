@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityNotFoundException;
 import kr.co.kcs.cims.domain.customer.dto.CreditTransactionDto;
+import kr.co.kcs.cims.domain.customer.dto.CreditTransactionRequestDto;
 import kr.co.kcs.cims.domain.customer.entity.CreditTransaction;
 import kr.co.kcs.cims.domain.customer.entity.Customer;
 import kr.co.kcs.cims.domain.customer.enums.RepaymentStatus;
@@ -33,7 +34,7 @@ public class CreditTransactionService {
     }
 
     @Transactional
-    public CreditTransactionDto createTransaction(Customer customer, CreditTransactionDto.CreditRequest creditRequest) {
+    public CreditTransactionDto createTransaction(Customer customer, CreditTransactionRequestDto creditRequest) {
         CreditTransaction transaction = creditRequest.toEntity();
 
         customer.addTransaction(transaction);

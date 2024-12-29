@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.kcs.cims.domain.customer.dto.CreditTransactionDto;
+import kr.co.kcs.cims.domain.customer.dto.CreditTransactionRequestDto;
 import kr.co.kcs.cims.domain.customer.entity.Customer;
 import kr.co.kcs.cims.domain.customer.enums.RepaymentStatus;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ public class CustomerCreditFacade {
     private final CreditTransactionService creditTransactionService;
 
     @Transactional
-    public CreditTransactionDto createTransaction(CreditTransactionDto.CreditRequest creditRequest) {
+    public CreditTransactionDto createTransaction(CreditTransactionRequestDto creditRequest) {
         Customer customer = customerService.getCustomer(creditRequest.customerId());
         CreditTransactionDto transaction = creditTransactionService.createTransaction(customer, creditRequest);
 
