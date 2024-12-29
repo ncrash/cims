@@ -1,13 +1,7 @@
 package kr.co.kcs.cims.domain.customer.enums;
 
 public enum RepaymentStatus {
-    /**
-     * 상환이 성공적으로 완료됨.
-     */
-    COMPLETE,
-
-    /**
-     * 상환이 연체됨
-     */
-    OVERDUE,
+    DEFAULT, // 채무불이행
+    COMPLETED, // 상환완료
+    ;
 }
