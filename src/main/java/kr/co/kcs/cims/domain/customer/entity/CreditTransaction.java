@@ -17,11 +17,14 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.persistence.Version;
 import kr.co.kcs.cims.domain.common.AbstractEntity;
 import kr.co.kcs.cims.domain.customer.enums.RepaymentStatus;
 import kr.co.kcs.cims.domain.customer.enums.TransactionType;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
@@ -32,6 +35,7 @@ import lombok.ToString;
             @Index(name = "idx_status", columnList = "status"),
             @Index(name = "idx_created_at", columnList = "createdAt")
         })
+@NoArgsConstructor
 @SQLDelete(sql = "UPDATE credit_transactions SET deleted = true, deleted_at = NOW() WHERE id = ? AND deleted = false")
 @ToString(exclude = "customer", callSuper = true)
 public class CreditTransaction extends AbstractEntity {
@@ -57,8 +61,25 @@ public class CreditTransaction extends AbstractEntity {
     @Column(length = 20, nullable = false)
     private RepaymentStatus status; // 완납, 연체
 
+    @Builder
+    public CreditTransaction(Customer customer, TransactionType type, BigDecimal amount, RepaymentStatus status) {
+        this.customer = customer;
+        this.type = type;
+        this.amount = amount;
+        this.status = status;
+    }
+
+    void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
     // 거래일자가 필요한 경우 createdAt 필드 참조
+    @Transient
     public LocalDateTime getTransactionDate() {
         return getCreatedAt();
+    }
+
+    public void changeStatus(RepaymentStatus status) {
+        // TODO verify 메소드 구현
     }
 }

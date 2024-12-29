@@ -32,11 +32,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Query("SELECT COUNT(ct) FROM CreditTransaction ct " + "WHERE ct.customer = :customer "
             + "AND ct.createdAt >= :date "
             + "AND ct.status = :status")
-    long countDefaultByCustomerAndDateAfter(
+    int countDelayedByCustomerAndDateAfter(
             @Param("customer") Customer customer,
             @Param("date") LocalDateTime date,
             @Param("status") RepaymentStatus status);
 
     @Query("SELECT COALESCE(SUM(ct.amount), 0) FROM CreditTransaction ct " + "WHERE ct.customer = :customer")
     BigDecimal sumTransactionAmountsByCustomer(@Param("customer") Customer customer);
+
+    void deleteCreditTransactionById(Long transactionId);
 }

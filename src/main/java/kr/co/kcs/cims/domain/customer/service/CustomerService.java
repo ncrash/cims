@@ -50,7 +50,7 @@ public class CustomerService {
         customerRepository.delete(customer);
     }
 
-    private Customer getCustomer(Long id) {
+    Customer getCustomer(Long id) {
         return customerRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));

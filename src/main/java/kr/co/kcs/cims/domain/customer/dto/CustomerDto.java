@@ -63,6 +63,8 @@ public record CustomerDto(
                 customer.getCreditGradeUpdatedAt());
     }
 
+    // TODO kr.co.kcs.cims.domain.customer.dto.CustomerDto.Request ->
+    // kr.co.kcs.cims.domain.customer.dto.CustomerRequestDto
     public record Request(
             @NotBlank(message = "이름은 필수입니다") @Size(min = 2, max = 50, message = "이름은 2자 이상 50자 이하여야 합니다") String name,
             @NotNull(message = "생년월일은 필수입니다") @Past(message = "생년월일은 과거 날짜여야 합니다") LocalDate birthDate,

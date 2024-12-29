@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.hibernate.annotations.SQLDelete;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -43,7 +44,7 @@ public class Customer extends AbstractEntity {
     @Embedded
     private PersonalInfo personalInfo;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<CreditTransaction> creditTransactions = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
@@ -53,16 +54,19 @@ public class Customer extends AbstractEntity {
     private LocalDateTime creditGradeUpdatedAt;
 
     @Builder
-    public Customer(PersonalInfo personalInfo, CreditGrade creditGrade, LocalDateTime creditGradeUpdatedAt) {
+    public Customer(Long id, PersonalInfo personalInfo, CreditGrade creditGrade, LocalDateTime creditGradeUpdatedAt) {
+        this.id = id;
         this.personalInfo = personalInfo;
         this.creditGrade = creditGrade;
         this.creditGradeUpdatedAt = creditGradeUpdatedAt;
     }
 
-    public void updateCreditGrade() {
-        // TODO 신용 등급 갱신 로직 구현
+    public void updateCreditGrade(CreditGrade creditGrade) {
+        // TODO verify 메소드 작성
+        this.creditGrade = creditGrade;
     }
 
+    // FIXME entity converter를 쓰는게 어떨지 검토
     public int getCreditGrade() {
         if (creditGrade == null) {
             return 0;
@@ -76,5 +80,17 @@ public class Customer extends AbstractEntity {
         // PersonalInfo 정보 업데이트 시 사전 검토되어야할 제약사항이 존재하는지 검토 후 업데이트 수행
 
         this.personalInfo = personalInfo;
+    }
+
+    public void addTransaction(CreditTransaction transaction) {
+        this.creditTransactions.add(transaction);
+        transaction.setCustomer(this);
+    }
+
+    public void removeTransaction(CreditTransaction transaction) {
+        if (transaction != null) {
+            this.creditTransactions.remove(transaction);
+            transaction.setCustomer(null); // 양방향 관계 해제
+        }
     }
 }
