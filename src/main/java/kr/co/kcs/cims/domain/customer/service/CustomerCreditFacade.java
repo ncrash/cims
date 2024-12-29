@@ -14,14 +14,14 @@ import lombok.RequiredArgsConstructor;
 public class CustomerCreditFacade {
     private final CustomerService customerService;
     private final CreditTransactionService creditTransactionService;
+    private final CreditScoreService creditScoreService;
 
     @Transactional
     public CreditTransactionDto createTransaction(CreditTransactionRequestDto creditRequest) {
         Customer customer = customerService.getCustomer(creditRequest.customerId());
         CreditTransactionDto transaction = creditTransactionService.createTransaction(customer, creditRequest);
 
-        // TODO 신용등급 재계산 이벤트 발행처리
-        //        creditScoreService.updateCreditScore(customer.getId());
+        creditScoreService.updateCreditScore(customer.getId());
 
         return transaction;
     }
@@ -32,9 +32,7 @@ public class CustomerCreditFacade {
         Customer customer = customerService.getCustomer(customerId);
         CreditTransactionDto transaction = creditTransactionService.updateTransaction(customer, transactionId, status);
 
-        // TODO 신용등급 재계산 이벤트 발행처리
-        // 거래 수정 후 신용점수 갱신
-        //        creditScoreService.updateCreditScore(transaction.getCustomer().getId());
+        creditScoreService.updateCreditScore(customer.getId());
 
         return transaction;
     }
@@ -45,8 +43,6 @@ public class CustomerCreditFacade {
         Customer customer = customerService.getCustomer(customerId);
         creditTransactionService.deleteTransaction(customer, transactionId);
 
-        // TODO 신용등급 재계산 이벤트 발행처리
-        // 거래 수정 후 신용점수 갱신
-        //        creditScoreService.updateCreditScore(transaction.getCustomer().getId());
+        creditScoreService.updateCreditScore(customer.getId());
     }
 }

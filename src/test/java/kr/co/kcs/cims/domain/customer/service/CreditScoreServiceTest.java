@@ -33,7 +33,7 @@ class CreditScoreServiceTest {
 
     @Test
     @DisplayName("연체가 없는 경우 기본 점수(7점)를 받는다")
-    void updateCreditScore_WithNoDefault() {
+    void updateCreditScore_WithNoDelayed() {
         // given
         Customer customer = createCustomer(1L);
         given(customerRepository.findById(1L)).willReturn(Optional.of(customer));
@@ -50,10 +50,10 @@ class CreditScoreServiceTest {
     }
 
     @Test
-    @DisplayName("1년 내 1회 연체 시 2점 감점되어 5점이 된다")
-    void updateCreditScore_WithOneDefault() {
+    @DisplayName("1년 내 1회 연체 시 2점 감점되어 10점 -> 8점이 된다")
+    void updateCreditScore_WithOneDelayed() {
         // given
-        Customer customer = createCustomer(1L);
+        Customer customer = createCustomer(1L, CreditGrade.GRADE_010);
         given(customerRepository.findById(1L)).willReturn(Optional.of(customer));
         given(customerRepository.countDelayedByCustomerAndDateAfter(any(), any(), any()))
                 .willReturn(1);
@@ -63,13 +63,13 @@ class CreditScoreServiceTest {
         creditScoreService.updateCreditScore(1L);
 
         // then
-        assertThat(customer.getCreditGrade()).isEqualTo(5);
+        assertThat(customer.getCreditGrade()).isEqualTo(8);
         verify(customerRepository).save(customer);
     }
 
     @Test
     @DisplayName("3회 이상 연체 시 5점 이하가 된다")
-    void updateCreditScore_WithThreeOrMoreDefaults() {
+    void updateCreditScore_WithThreeOrMoreDelayeds() {
         // given
         Customer customer = createCustomer(1L);
         given(customerRepository.findById(1L)).willReturn(Optional.of(customer));
