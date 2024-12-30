@@ -27,7 +27,7 @@ public class CustomerCreditFacade {
     }
 
     public CreditTransactionDto updateTransaction(Long customerId, Long transactionId, RepaymentStatus status) {
-        // TODO transaction id 필수값 체크
+        verifyTransactionId(transactionId);
 
         Customer customer = customerService.getCustomer(customerId);
         CreditTransactionDto transaction = creditTransactionService.updateTransaction(customer, transactionId, status);
@@ -38,11 +38,17 @@ public class CustomerCreditFacade {
     }
 
     public void deleteTransaction(Long customerId, Long transactionId) {
-        // TODO transaction id 필수값 체크
+        verifyTransactionId(transactionId);
 
         Customer customer = customerService.getCustomer(customerId);
         creditTransactionService.deleteTransaction(customer, transactionId);
 
         creditScoreService.updateCreditScore(customer.getId());
+    }
+
+    private void verifyTransactionId(Long transactionId) {
+        if (transactionId == null || transactionId < 0L) {
+            throw new IllegalArgumentException("transactionId 파라미터가 잘못 되었습니다. " + transactionId);
+        }
     }
 }

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -36,6 +37,7 @@ import lombok.ToString;
         })
 @NoArgsConstructor
 @SQLDelete(sql = "UPDATE customers SET deleted = true, deleted_at = NOW() WHERE id = ? AND deleted = false")
+@SQLRestriction("deleted = false")
 @ToString(exclude = "creditTransactions", callSuper = true)
 public class Customer extends AbstractEntity {
     @Id

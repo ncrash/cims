@@ -11,13 +11,25 @@
    - Spring Boot 3.4.x
    - MariaDB 11.x
 
-2. 빌드 및 실행
+2. 데이터베이스 유저 및 디비 생성
+```sql
+-- User
+CREATE USER 'kcs'@'localhost' IDENTIFIED BY 'password!@#$';
+GRANT ALL PRIVILEGES ON `kcs`.* TO 'kcs'@'localhost';
+FLUSH PRIVILEGES;
+
+-- Database
+CREATE DATABASE kcs DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+
+```
+
+3. 빌드 및 실행
    ```bash
    ./gradlew clean build
    java -jar build/libs/cims-0.0.1-SNAPSHOT.jar
    ```
 
-3. (Optional) Flyway migration
+4. (Optional) Flyway migration
    ```bash
    ./gradlew clean build
    java -jar build/libs/cims-0.0.1-SNAPSHOT.jar --flyway=true 

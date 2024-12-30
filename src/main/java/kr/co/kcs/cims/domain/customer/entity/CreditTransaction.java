@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,6 +38,7 @@ import lombok.ToString;
         })
 @NoArgsConstructor
 @SQLDelete(sql = "UPDATE credit_transactions SET deleted = true, deleted_at = NOW() WHERE id = ? AND deleted = false")
+@SQLRestriction("deleted = false")
 @ToString(exclude = "customer", callSuper = true)
 public class CreditTransaction extends AbstractEntity {
     @Id

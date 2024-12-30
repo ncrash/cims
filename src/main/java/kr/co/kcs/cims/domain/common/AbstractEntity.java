@@ -3,7 +3,6 @@ package kr.co.kcs.cims.domain.common;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.proxy.HibernateProxy;
 
 import jakarta.persistence.Column;
@@ -17,7 +16,6 @@ import lombok.Getter;
 
 @Getter
 @MappedSuperclass
-@SQLRestriction("deleted = false")
 public abstract class AbstractEntity {
 
     public abstract Long getId();

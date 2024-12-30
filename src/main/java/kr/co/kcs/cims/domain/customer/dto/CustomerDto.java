@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.soabase.recordbuilder.core.RecordBuilder;
 import kr.co.kcs.cims.domain.customer.entity.Customer;
 import kr.co.kcs.cims.domain.customer.entity.PersonalInfo;
+import kr.co.kcs.cims.domain.customer.enums.CreditGrade;
 
 /**
  * DTO for {@link Customer}
@@ -20,9 +21,11 @@ public record CustomerDto(
         Long id,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
+        boolean deleted,
+        LocalDateTime deletedAt,
         PersonalInfoDto personalInfo,
         List<CreditTransactionDto> creditTransactions,
-        int creditGrade,
+        CreditGrade creditGrade,
         LocalDateTime creditGradeUpdatedAt)
         implements Serializable {
 
@@ -53,9 +56,11 @@ public record CustomerDto(
                 customer.getId(),
                 customer.getCreatedAt(),
                 customer.getUpdatedAt(),
+                customer.isDeleted(),
+                customer.getDeletedAt(),
                 PersonalInfoDto.from(customer),
                 creditTransactionDtoList,
-                customer.getCreditGrade(),
+                CreditGrade.findByGrade(customer.getCreditGrade()),
                 customer.getCreditGradeUpdatedAt());
     }
 }

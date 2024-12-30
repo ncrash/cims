@@ -20,9 +20,13 @@ public record CreditTransactionDto(
         Long id,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
+        boolean deleted,
+        LocalDateTime deletedAt,
+        Integer version,
         TransactionType type,
         BigDecimal amount,
-        RepaymentStatus status)
+        RepaymentStatus status,
+        LocalDateTime transactionDate)
         implements Serializable {
 
     public static CreditTransactionDto from(CreditTransaction creditTransaction) {
@@ -30,12 +34,26 @@ public record CreditTransactionDto(
                 creditTransaction.getId(),
                 creditTransaction.getCreatedAt(),
                 creditTransaction.getUpdatedAt(),
+                creditTransaction.isDeleted(),
+                creditTransaction.getDeletedAt(),
+                creditTransaction.getVersion(),
                 creditTransaction.getType(),
                 creditTransaction.getAmount(),
-                creditTransaction.getStatus());
+                creditTransaction.getStatus(),
+                creditTransaction.getTransactionDate());
     }
 
     public CreditTransactionDto withStatus(RepaymentStatus newStatus) {
-        return new CreditTransactionDto(id(), createdAt(), updatedAt(), type(), amount(), newStatus);
+        return new CreditTransactionDto(
+                id(),
+                createdAt(),
+                updatedAt(),
+                deleted(),
+                deletedAt(),
+                version(),
+                type(),
+                amount(),
+                newStatus,
+                transactionDate());
     }
 }
