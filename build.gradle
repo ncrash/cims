@@ -33,11 +33,16 @@ dependencies {
 	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.flywaydb:flyway-mysql'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
-	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	developmentOnly 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.2'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
 	annotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok'
+
+	annotationProcessor 'io.soabase.record-builder:record-builder-processor:44'
+	compileOnly 'io.soabase.record-builder:record-builder-core:44'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.testcontainers:junit-jupiter'

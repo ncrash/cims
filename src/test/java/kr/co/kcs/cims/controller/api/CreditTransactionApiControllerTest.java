@@ -31,7 +31,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.ServletException;
 import kr.co.kcs.cims.domain.customer.dto.CreditTransactionDto;
+import kr.co.kcs.cims.domain.customer.dto.CreditTransactionDtoBuilder;
 import kr.co.kcs.cims.domain.customer.dto.CreditTransactionRequestDto;
+import kr.co.kcs.cims.domain.customer.dto.CreditTransactionRequestDtoBuilder;
 import kr.co.kcs.cims.domain.customer.enums.RepaymentStatus;
 import kr.co.kcs.cims.domain.customer.enums.TransactionType;
 import kr.co.kcs.cims.domain.customer.service.CreditTransactionService;
@@ -57,7 +59,7 @@ class CreditTransactionApiControllerTest {
 
     @BeforeEach
     void setUp() {
-        sampleDto = CreditTransactionDto.builder()
+        sampleDto = CreditTransactionDtoBuilder.builder()
                 .id(1L)
                 .amount(BigDecimal.valueOf(10000))
                 .type(TransactionType.CREDIT_CARD)
@@ -66,7 +68,7 @@ class CreditTransactionApiControllerTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        sampleRequestDto = CreditTransactionRequestDto.builder()
+        sampleRequestDto = CreditTransactionRequestDtoBuilder.builder()
                 .customerId(1L)
                 .type(TransactionType.CREDIT_CARD)
                 .amount(BigDecimal.valueOf(10000))
@@ -136,7 +138,7 @@ class CreditTransactionApiControllerTest {
         when(customerCreditFacade.createTransaction(any())).thenThrow(new IllegalArgumentException("잘못된 요청"));
 
         CreditTransactionRequestDto badRequestDto =
-                CreditTransactionRequestDto.builder().build();
+                CreditTransactionRequestDtoBuilder.builder().build();
 
         mockMvc.perform(post("/api/v1/transactions")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -7,12 +7,14 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import io.soabase.recordbuilder.core.RecordBuilder;
 import kr.co.kcs.cims.domain.customer.entity.Customer;
 import kr.co.kcs.cims.domain.customer.entity.PersonalInfo;
 
 /**
  * DTO for {@link Customer}
  */
+@RecordBuilder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record CustomerDto(
         Long id,
@@ -27,6 +29,7 @@ public record CustomerDto(
     /**
      * DTO for {@link PersonalInfo}
      */
+    @RecordBuilder
     @JsonIgnoreProperties(ignoreUnknown = true)
     public record PersonalInfoDto(String name, LocalDate birthDate, String email, String phoneNumber)
             implements Serializable {

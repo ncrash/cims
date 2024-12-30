@@ -3,14 +3,14 @@ package kr.co.kcs.cims.domain.customer.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import kr.co.kcs.cims.domain.customer.entity.CreditTransaction;
 import kr.co.kcs.cims.domain.customer.enums.RepaymentStatus;
 import kr.co.kcs.cims.domain.customer.enums.TransactionType;
-import lombok.Builder;
 
-@Builder
+@RecordBuilder
 public record CreditTransactionRequestDto(
         Long transactionId,
         @NotNull(message = "고객 ID는 필수입니다") Long customerId,

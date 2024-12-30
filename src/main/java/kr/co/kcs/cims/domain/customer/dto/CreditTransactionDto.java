@@ -6,15 +6,15 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import io.soabase.recordbuilder.core.RecordBuilder;
 import kr.co.kcs.cims.domain.customer.entity.CreditTransaction;
 import kr.co.kcs.cims.domain.customer.enums.RepaymentStatus;
 import kr.co.kcs.cims.domain.customer.enums.TransactionType;
-import lombok.Builder;
 
 /**
  * DTO for {@link CreditTransaction}
  */
-@Builder
+@RecordBuilder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record CreditTransactionDto(
         Long id,

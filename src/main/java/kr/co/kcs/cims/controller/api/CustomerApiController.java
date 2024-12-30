@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kr.co.kcs.cims.domain.common.PageResponseDto;
 import kr.co.kcs.cims.domain.customer.dto.CustomerDto;
 import kr.co.kcs.cims.domain.customer.dto.CustomerRequestDto;
 import kr.co.kcs.cims.domain.customer.service.CustomerService;
@@ -23,8 +24,9 @@ public class CustomerApiController {
 
     @Operation(summary = "고객 목록 조회", description = "페이징된 고객 목록을 조회합니다.")
     @GetMapping
-    public ResponseEntity<Page<CustomerDto>> getCustomers(Pageable pageable) {
-        return ResponseEntity.ok(customerService.findCustomers(pageable));
+    public ResponseEntity<PageResponseDto<CustomerDto>> getCustomers(Pageable pageable) {
+        Page<CustomerDto> customers = customerService.findCustomers(pageable);
+        return ResponseEntity.ok(PageResponseDto.from(customers));
     }
 
     @Operation(summary = "고객 상세 조회", description = "고객 ID로 상세 정보를 조회합니다.")

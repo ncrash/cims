@@ -3,6 +3,7 @@ package kr.co.kcs.cims.domain.customer.dto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import kr.co.kcs.cims.domain.customer.entity.Customer;
 import kr.co.kcs.cims.domain.customer.entity.PersonalInfo;
 import kr.co.kcs.cims.domain.customer.enums.CreditGrade;
 
+@RecordBuilder
 public record CustomerRequestDto(
         @NotBlank(message = "이름은 필수입니다") @Size(min = 2, max = 50, message = "이름은 2자 이상 50자 이하여야 합니다") String name,
         @NotNull(message = "생년월일은 필수입니다") @Past(message = "생년월일은 과거 날짜여야 합니다") LocalDate birthDate,
