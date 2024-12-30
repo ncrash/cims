@@ -2,6 +2,7 @@ package kr.co.kcs.cims.domain.customer.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.annotations.SQLDelete;
@@ -59,6 +60,10 @@ public class Customer extends AbstractEntity {
         this.personalInfo = personalInfo;
         this.creditGrade = creditGrade;
         this.creditGradeUpdatedAt = creditGradeUpdatedAt;
+    }
+
+    public List<CreditTransaction> getCreditTransactions() {
+        return Collections.unmodifiableList(creditTransactions);
     }
 
     public void updateCreditGrade(CreditGrade creditGrade) {

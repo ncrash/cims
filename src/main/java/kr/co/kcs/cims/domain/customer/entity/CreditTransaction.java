@@ -81,5 +81,6 @@ public class CreditTransaction extends AbstractEntity {
 
     public void changeStatus(RepaymentStatus status) {
         // TODO verify 메소드 구현
+        this.status = status;
     }
 }

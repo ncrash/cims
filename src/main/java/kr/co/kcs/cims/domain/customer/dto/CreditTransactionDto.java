@@ -9,10 +9,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import kr.co.kcs.cims.domain.customer.entity.CreditTransaction;
 import kr.co.kcs.cims.domain.customer.enums.RepaymentStatus;
 import kr.co.kcs.cims.domain.customer.enums.TransactionType;
+import lombok.Builder;
 
 /**
  * DTO for {@link CreditTransaction}
  */
+@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record CreditTransactionDto(
         Long id,
@@ -31,5 +33,9 @@ public record CreditTransactionDto(
                 creditTransaction.getType(),
                 creditTransaction.getAmount(),
                 creditTransaction.getStatus());
+    }
+
+    public CreditTransactionDto withStatus(RepaymentStatus newStatus) {
+        return new CreditTransactionDto(id(), createdAt(), updatedAt(), type(), amount(), newStatus);
     }
 }

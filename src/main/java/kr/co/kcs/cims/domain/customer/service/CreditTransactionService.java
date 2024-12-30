@@ -73,4 +73,3 @@ public class CreditTransactionService {
                 .orElseThrow(() -> new EntityNotFoundException("CreditTransaction not found"));
     }
 }
-// TODO deleteTransaction 메소드는 정상 동작 확인함, createTransaction, updateTransaction 메소드 정상동작 테스트 해야함
