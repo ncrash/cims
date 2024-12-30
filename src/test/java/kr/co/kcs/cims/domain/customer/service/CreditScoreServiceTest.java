@@ -133,6 +133,41 @@ class CreditScoreServiceTest {
                 .hasMessage("Customer not found with id: 999");
     }
 
+    @Test
+    @DisplayName("신용점수는 최소 1점 이하로 내려가지 않는다")
+    void updateCreditScore_MinimumScoreTest() {
+        // given
+        Customer customer = createCustomer(1L, CreditGrade.GRADE_001);
+        given(customerRepository.findById(1L)).willReturn(Optional.of(customer));
+        given(customerRepository.countDelayedByCustomerAndDateAfter(any(), any(), any()))
+                .willReturn(5); // 많은 연체 횟수
+        given(customerRepository.sumTransactionAmountsByCustomer(any())).willReturn(BigDecimal.ZERO);
+
+        // when
+        creditScoreService.updateCreditScore(1L);
+
+        // then
+        assertThat(customer.getCreditGrade()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("신용점수는 최대 10점을 초과하지 않는다")
+    void updateCreditScore_MaximumScoreTest() {
+        // given
+        Customer customer = createCustomer(1L, CreditGrade.GRADE_010);
+        given(customerRepository.findById(1L)).willReturn(Optional.of(customer));
+        given(customerRepository.countDelayedByCustomerAndDateAfter(any(), any(), any()))
+                .willReturn(0);
+        given(customerRepository.sumTransactionAmountsByCustomer(any()))
+                .willReturn(new BigDecimal("200000000")); // 매우 큰 거래금액
+
+        // when
+        creditScoreService.updateCreditScore(1L);
+
+        // then
+        assertThat(customer.getCreditGrade()).isEqualTo(10);
+    }
+
     private Customer createCustomer(Long id) {
         return createCustomer(id, CreditGrade.GRADE_007);
     }

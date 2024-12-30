@@ -20,13 +20,14 @@ public class CreditScoreService {
     // 신용등급 최대값 (10점)
     private static final int MAX_SCORE = 10;
 
-    // 신용등급 최소값 (1점)
-    // 3회 이상 연체: 5점 이하로 하락하는 규칙이 있으므로,
-    // 최소값은 1점으로 설정하여 5점 이하로 떨어질 수 있도록 함
-    private static final int MIN_SCORE = 1;
-
-    // 기본 등급: 7점 (연체 없고 정상 거래)
+    // 신용등급 기본값 (7점) - (연체 없고 정상 거래)
     private static final int BASE_SCORE = 7;
+
+    // 신용등급 3회연체 시 강등값 (5점)
+    private static final int MID_SCORE = 5;
+
+    // 신용등급 최소값 (1점)
+    private static final int MIN_SCORE = 1;
 
     // 1년 내 1회 연체: -2점
     private static final int DELAYED_PENALTY = -2;
@@ -60,9 +61,9 @@ public class CreditScoreService {
     }
 
     private int calculateScore(int currentGrade, int delayedCount, int bonusPoints) {
-        // 3회 이상 연체: 5점 이하
+        // 3회 이상 연체: 5등급 이상은 5등급으로 강등하며, 5등급 이하인 경우에는 그대로 유지한다.
         if (delayedCount >= 3) {
-            return Math.min(currentGrade, 5);
+            return Math.min(currentGrade, MID_SCORE);
         }
 
         // 1년내 1회 연체: -2점
@@ -71,7 +72,7 @@ public class CreditScoreService {
             deductPoints += DELAYED_PENALTY;
         }
 
-        return Math.max(1, currentGrade + deductPoints + bonusPoints);
+        return Math.min(MAX_SCORE, Math.max(MIN_SCORE, currentGrade + deductPoints + bonusPoints));
     }
 
     private int calculateBonusPoints(Customer customer) {
