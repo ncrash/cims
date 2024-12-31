@@ -54,7 +54,7 @@ public class CreditScoreService {
     }
 
     private int calculateDelayedCount(Customer customer) {
-        LocalDateTime oneYearAgo = LocalDateTime.now().minusYears(1);
+        LocalDateTime oneYearAgo = LocalDateTime.now(customer.getClock()).minusYears(1);
 
         // 1년 내 연체 건수 조회
         return customerRepository.countDelayedByCustomerAndDateAfter(customer, oneYearAgo, RepaymentStatus.DELAYED);

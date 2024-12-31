@@ -83,7 +83,29 @@ public class CreditTransaction extends AbstractEntity {
     }
 
     public void changeStatus(RepaymentStatus status) {
-        // TODO verify 메소드 구현
+        verifyStatusChange(status);
+
         this.status = status;
+    }
+
+    private void verifyStatusChange(RepaymentStatus newStatus) {
+        if (newStatus == null) {
+            throw new IllegalArgumentException("상환 상태는 null일 수 없습니다.");
+        }
+
+        // 현재 상태와 동일한 상태로 변경 시도하는 경우
+        if (this.status == newStatus) {
+            throw new IllegalArgumentException("현재와 동일한 상태로 변경할 수 없습니다.");
+        }
+
+        // PAID 상태에서 다른 상태로 변경 불가
+        if (this.status == RepaymentStatus.PAID) {
+            throw new IllegalArgumentException("완료된 거래의 상태는 변경할 수 없습니다.");
+        }
+
+        // DELAYED 상태에서는 PAID로만 변경 가능
+        if (this.status == RepaymentStatus.DELAYED && newStatus != RepaymentStatus.PAID) {
+            throw new IllegalArgumentException("연체 상태에서는 완료 상태로만 변경할 수 있습니다.");
+        }
     }
 }

@@ -80,11 +80,12 @@ public class Customer extends AbstractEntity implements UserDetails {
     }
 
     public void updateCreditGrade(CreditGrade creditGrade) {
-        // TODO verify 메소드 작성
+        verifyCreditGradeUpdate(creditGrade);
+
         this.creditGrade = creditGrade;
+        this.creditGradeUpdatedAt = LocalDateTime.now(clock);
     }
 
-    // FIXME entity converter를 쓰는게 어떨지 검토
     public int getCreditGrade() {
         if (creditGrade == null) {
             return 0;
@@ -94,9 +95,6 @@ public class Customer extends AbstractEntity implements UserDetails {
     }
 
     public void updatePersonalInfo(PersonalInfo personalInfo) {
-        // TODO verify 메소드 구현
-        // PersonalInfo 정보 업데이트 시 사전 검토되어야할 제약사항이 존재하는지 검토 후 업데이트 수행
-
         this.personalInfo = personalInfo;
     }
 
@@ -115,5 +113,33 @@ public class Customer extends AbstractEntity implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    private void verifyCreditGradeUpdate(CreditGrade newGrade) {
+        // null 체크
+        if (newGrade == null) {
+            throw new IllegalArgumentException("신용등급은 null일 수 없습니다.");
+        }
+
+        // 현재 등급이 없는 경우 (신규 고객)
+        if (this.creditGrade == null) {
+            return;
+        }
+
+        // 한 번에 2단계 이상 상승 불가
+        if (newGrade.getGradeNumber() - this.creditGrade.getGradeNumber() > 2) {
+            throw new IllegalArgumentException("신용등급은 한 번에 2단계까지만 상승할 수 있습니다.");
+        }
+
+        // 한 번에 3단계 이상 하락 불가
+        if (this.creditGrade.getGradeNumber() - newGrade.getGradeNumber() > 3) {
+            throw new IllegalArgumentException("신용등급은 한 번에 3단계까지만 하락할 수 있습니다.");
+        }
+
+        // 최근 3개월 내 등급 변경이 있었다면 변경 불가
+        if (this.creditGradeUpdatedAt != null
+                && this.creditGradeUpdatedAt.plusMonths(3).isAfter(LocalDateTime.now(clock))) {
+            throw new IllegalArgumentException("신용등급은 최근 변경일로부터 3개월이 지나야 재변경이 가능합니다.");
+        }
     }
 }

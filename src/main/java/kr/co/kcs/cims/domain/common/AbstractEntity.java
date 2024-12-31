@@ -1,9 +1,12 @@
 package kr.co.kcs.cims.domain.common;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.hibernate.proxy.HibernateProxy;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
@@ -12,7 +15,9 @@ import jakarta.persistence.PreRemove;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.persistence.Transient;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @MappedSuperclass
@@ -82,4 +87,10 @@ public abstract class AbstractEntity {
     protected final Object clone() throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
+
+    // 테스트 전용 필드
+    @Setter
+    @Transient
+    @JsonIgnore
+    protected Clock clock = Clock.systemDefaultZone();
 }
