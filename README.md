@@ -83,3 +83,4 @@ CREATE DATABASE kcs DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 ## 개선포인트
 - [보안] 개인정보 암호화
 - [보안] 비밀번호 설정파일 하드코딩 
+- [보안] JWT 갱신토큰 처리

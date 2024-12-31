@@ -23,6 +23,7 @@ import jakarta.persistence.Version;
 import kr.co.kcs.cims.domain.common.AbstractEntity;
 import kr.co.kcs.cims.domain.customer.enums.RepaymentStatus;
 import kr.co.kcs.cims.domain.customer.enums.TransactionType;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,7 +37,7 @@ import lombok.ToString;
             @Index(name = "idx_status", columnList = "status"),
             @Index(name = "idx_created_at", columnList = "createdAt")
         })
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE credit_transactions SET deleted = true, deleted_at = NOW() WHERE id = ? AND deleted = false")
 @SQLRestriction("deleted = false")
 @ToString(exclude = "customer", callSuper = true)

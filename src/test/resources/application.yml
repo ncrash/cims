@@ -1,0 +1,5 @@
+jwt:
+  secret: test-secret-key-test-secret-key-test-secret-key
+  token-validity-in-seconds:
+    access-token: 600    # 10분 (60초 * 10분)
+    refresh-token: 3600  # 1시간 (60초 * 60분)

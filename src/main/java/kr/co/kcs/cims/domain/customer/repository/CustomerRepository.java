@@ -17,6 +17,8 @@ import kr.co.kcs.cims.domain.customer.enums.RepaymentStatus;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+    Optional<Customer> findByUsername(String username);
+
     @Query("SELECT ct FROM CreditTransaction ct WHERE ct.customer.id = :customerId AND ct.id = :transactionId")
     Optional<CreditTransaction> findTransactionByCustomerIdAndTransactionId(
             @Param("customerId") Long customerId, @Param("transactionId") Long transactionId);

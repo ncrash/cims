@@ -34,6 +34,13 @@ springdoc:
     display-request-duration: true
     operations-sorter: alpha
 
+jwt:
+  secret: 1e477c31a9ed3471f107e0b4d3803ba3d72f4377693340de05a62927a299a0604b1012f8892bfc704b24af21c5b008e897be374f5264bc3eae5647bba338adcae1c0da200a25cbbd1d84e48ad8443d660ab44184a8df88c882c0012af7a26cf696cb26387972e532831929cee6d4c2a974790b15027d7b4eaadca9dfc73749158bb3ac6b67e5ecd13e4fbcf9a018e408c9115eca02f6f697b16baa62b645313d5bb0465b815624a7fdcc3278685cc414a744e0d02e1f30d2a1302943d23e4a578a2c6f402168c0aeacf1117f83503330f87ed1df158d1df70caf19f24465b41a9baad496fef7028ea9da1a464054bdfc3a5d296a1b58614a3bec755103a1417c
+  token-validity-in-seconds:
+    access-token: 3600    # 1시간 (60초 * 60분)
+    refresh-token: 86400  # 24시간 (60초 * 60분 * 24시간)
+
+
 ---
 spring:
   config:

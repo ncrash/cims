@@ -1,4 +1,4 @@
-package kr.co.kcs.cims.controller.api;
+package kr.co.kcs.cims.controller.api.customer;
 
 import java.util.Optional;
 
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import kr.co.kcs.cims.domain.common.PageResponseDto;
+import kr.co.kcs.cims.controller.api.common.PageResponseDto;
 import kr.co.kcs.cims.domain.customer.dto.CreditTransactionDto;
 import kr.co.kcs.cims.domain.customer.dto.CreditTransactionRequestDto;
 import kr.co.kcs.cims.domain.customer.enums.RepaymentStatus;

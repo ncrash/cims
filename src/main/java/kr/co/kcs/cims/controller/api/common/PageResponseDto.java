@@ -1,4 +1,4 @@
-package kr.co.kcs.cims.domain.common;
+package kr.co.kcs.cims.controller.api.common;
 
 import java.util.List;
 

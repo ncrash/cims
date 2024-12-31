@@ -1,4 +1,4 @@
-package kr.co.kcs.cims.controller.api;
+package kr.co.kcs.cims.controller.api.customer;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import kr.co.kcs.cims.domain.common.PageResponseDto;
+import kr.co.kcs.cims.controller.api.common.PageResponseDto;
 import kr.co.kcs.cims.domain.customer.dto.CustomerDto;
 import kr.co.kcs.cims.domain.customer.dto.CustomerRequestDto;
 import kr.co.kcs.cims.domain.customer.service.CustomerService;

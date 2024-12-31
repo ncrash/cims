@@ -4,11 +4,11 @@
 
 ```sql
 -- 고객 데이터
-INSERT INTO customers (id, name, birth_date, email, phone_number, credit_grade, credit_grade_updated_at, created_at, updated_at, deleted) 
+INSERT INTO customers (id, name, username, password, birth_date, email, phone_number, credit_grade, credit_grade_updated_at, created_at, updated_at, deleted) 
 VALUES 
-(1, '김신용', '1990-01-15', 'kim@test.com', '010-1234-5678', 'GRADE_007', '2024-12-24 00:00:00', '2024-12-24 00:00:00', '2024-12-24 00:00:00', 0),
-(2, '이연체', '1985-05-20', 'lee@test.com', '010-2345-6789', 'GRADE_005', '2024-12-24 00:00:00', '2024-12-24 00:00:00', '2024-12-24 00:00:00', 0),
-(3, '박우수', '1995-12-10', 'park@test.com', '010-3456-7890', 'GRADE_009', '2024-12-24 00:00:00', '2024-12-24 00:00:00', '2024-12-24 00:00:00', 0);
+(1, '김신용', 'user0', '$2a$12$VY90WAHDnH7.sXeluSAuT.5hP83SJ4J2ZxziARgy0tU/C5FIkyIMK', '1990-01-15', 'kim@test.com', '010-1234-5678', 'GRADE_007', '2024-12-24 00:00:00', '2024-12-24 00:00:00', '2024-12-24 00:00:00', 0),
+(2, '이연체', 'user1', '$2a$12$wq7lA/o.4/LEGUZwfURIJunJ7SYiQqxR2PSc33Tr8k4fF9e2oWjom', '1985-05-20', 'lee@test.com', '010-2345-6789', 'GRADE_005', '2024-12-24 00:00:00', '2024-12-24 00:00:00', '2024-12-24 00:00:00', 0),
+(3, '박우수', 'user2', '$2a$12$p92gQFosldcW2ys1Xhb.d.XVNmul1xUwNMOKEXUN9ZG1SNNPPSKzK', '1995-12-10', 'park@test.com', '010-3456-7890', 'GRADE_009', '2024-12-24 00:00:00', '2024-12-24 00:00:00', '2024-12-24 00:00:00', 0);
 
 -- 신용 거래 데이터
 INSERT INTO credit_transactions (customer_id, type, amount, status, created_at, updated_at, deleted, version) 
