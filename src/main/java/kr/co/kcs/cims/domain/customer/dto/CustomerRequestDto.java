@@ -16,6 +16,9 @@ import kr.co.kcs.cims.domain.customer.enums.CreditGrade;
 
 @RecordBuilder
 public record CustomerRequestDto(
+        @NotBlank(message = "아이디는 필수입니다") @Size(min = 5, max = 20, message = "아이디는 5자 이상 20자 이하여야 합니다") String username,
+        @NotBlank(message = "비밀번호는 필수입니다") @Size(min = 8, max = 30, message = "비밀번호는 8자 이상 30자 이하여야 합니다")
+                String password,
         @NotBlank(message = "이름은 필수입니다") @Size(min = 2, max = 50, message = "이름은 2자 이상 50자 이하여야 합니다") String name,
         @NotNull(message = "생년월일은 필수입니다") @Past(message = "생년월일은 과거 날짜여야 합니다") LocalDate birthDate,
         @NotBlank(message = "이메일은 필수입니다")
@@ -38,6 +41,8 @@ public record CustomerRequestDto(
                 .build();
 
         return Customer.builder()
+                .username(this.username)
+                .password(this.password)
                 .personalInfo(personalInfo)
                 .creditGrade(CreditGrade.GRADE_007)
                 .creditGradeUpdatedAt(LocalDateTime.now())

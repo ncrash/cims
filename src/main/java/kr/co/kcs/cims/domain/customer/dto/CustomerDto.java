@@ -19,6 +19,7 @@ import kr.co.kcs.cims.domain.customer.enums.CreditGrade;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record CustomerDto(
         Long id,
+        String username,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         boolean deleted,
@@ -54,6 +55,7 @@ public record CustomerDto(
 
         return new CustomerDto(
                 customer.getId(),
+                customer.getUsername(),
                 customer.getCreatedAt(),
                 customer.getUpdatedAt(),
                 customer.isDeleted(),

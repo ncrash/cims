@@ -68,8 +68,16 @@ public class Customer extends AbstractEntity implements UserDetails {
     private LocalDateTime creditGradeUpdatedAt;
 
     @Builder
-    public Customer(Long id, PersonalInfo personalInfo, CreditGrade creditGrade, LocalDateTime creditGradeUpdatedAt) {
+    public Customer(
+            Long id,
+            String username,
+            String password,
+            PersonalInfo personalInfo,
+            CreditGrade creditGrade,
+            LocalDateTime creditGradeUpdatedAt) {
         this.id = id;
+        this.username = username;
+        this.password = password;
         this.personalInfo = personalInfo;
         this.creditGrade = creditGrade;
         this.creditGradeUpdatedAt = creditGradeUpdatedAt;

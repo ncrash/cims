@@ -69,6 +69,8 @@ class CustomerApiControllerTest {
                 .build();
 
         sampleRequestDto = CustomerRequestDtoBuilder.builder()
+                .username("user1")
+                .password("password1")
                 .name("홍길동")
                 .birthDate(LocalDate.of(1988, 9, 17))
                 .email("hong@korea.com")
