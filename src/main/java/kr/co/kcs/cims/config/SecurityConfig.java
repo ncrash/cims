@@ -2,6 +2,7 @@ package kr.co.kcs.cims.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,6 +44,9 @@ public class SecurityConfig {
                         .permitAll()
                         // 공개 API 경로 허용
                         .requestMatchers(publicApiPaths)
+                        .permitAll()
+                        // 고객 등록 API 허용
+                        .requestMatchers(HttpMethod.POST, "/api/v1/customers")
                         .permitAll()
                         // API 요청은 인증 필요
                         .requestMatchers("/api/**")
