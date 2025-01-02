@@ -1,5 +1,5 @@
 ALTER TABLE customers
-    ADD username VARCHAR(20) NOT NULL after deleted_at;
+    ADD username VARCHAR(20) NOT NULL after id;
 
 ALTER TABLE customers
     ADD password VARCHAR(255) NOT NULL after username;

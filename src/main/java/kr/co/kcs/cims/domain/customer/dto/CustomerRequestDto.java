@@ -1,7 +1,6 @@
 package kr.co.kcs.cims.domain.customer.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.Email;
@@ -12,7 +11,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import kr.co.kcs.cims.domain.customer.entity.Customer;
 import kr.co.kcs.cims.domain.customer.entity.PersonalInfo;
-import kr.co.kcs.cims.domain.customer.enums.CreditGrade;
 
 @RecordBuilder
 public record CustomerRequestDto(
@@ -32,7 +30,7 @@ public record CustomerRequestDto(
                 String phoneNumber) {
 
     // DTO -> Customer
-    public Customer toEntity() {
+    public Customer toEntity(String encodedPassword) {
         PersonalInfo personalInfo = PersonalInfo.builder()
                 .name(this.name)
                 .birthDate(this.birthDate)
@@ -42,10 +40,8 @@ public record CustomerRequestDto(
 
         return Customer.builder()
                 .username(this.username)
-                .password(this.password)
+                .password(encodedPassword)
                 .personalInfo(personalInfo)
-                .creditGrade(CreditGrade.GRADE_007)
-                .creditGradeUpdatedAt(LocalDateTime.now())
                 .build();
     }
 }

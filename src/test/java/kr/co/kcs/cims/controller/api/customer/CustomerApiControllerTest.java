@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -36,6 +37,7 @@ import kr.co.kcs.cims.domain.customer.dto.CustomerDtoBuilder;
 import kr.co.kcs.cims.domain.customer.dto.CustomerDtoPersonalInfoDtoBuilder;
 import kr.co.kcs.cims.domain.customer.dto.CustomerRequestDto;
 import kr.co.kcs.cims.domain.customer.dto.CustomerRequestDtoBuilder;
+import kr.co.kcs.cims.domain.customer.service.CustomerCreditFacade;
 import kr.co.kcs.cims.domain.customer.service.CustomerService;
 
 @WebMvcTest(CustomerApiController.class)
@@ -50,6 +52,9 @@ class CustomerApiControllerTest {
 
     @MockitoBean
     private CustomerService customerService;
+
+    @MockitoBean
+    private CustomerCreditFacade customerCreditFacade;
 
     private CustomerDto sampleDto;
     private CustomerRequestDto sampleRequestDto;
@@ -119,6 +124,7 @@ class CustomerApiControllerTest {
 
     @Test
     @DisplayName("고객 정보 수정 테스트")
+    @WithMockUser(username = "user1")
     void updateCustomerTest() throws Exception {
         var updatedCustomer = CustomerDtoBuilder.builder()
                 .id(1L)
@@ -130,9 +136,9 @@ class CustomerApiControllerTest {
                         .build())
                 .build();
 
-        when(customerService.updateCustomer(eq(1L), any())).thenReturn(updatedCustomer);
+        when(customerService.updateCustomer(eq("user1"), any())).thenReturn(updatedCustomer);
 
-        mockMvc.perform(put("/api/v1/customers/1")
+        mockMvc.perform(put("/api/v1/customers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(sampleRequestDto)))
                 .andExpect(status().isOk())
@@ -141,8 +147,9 @@ class CustomerApiControllerTest {
 
     @Test
     @DisplayName("고객 삭제 테스트")
+    @WithMockUser(username = "user1")
     void deleteCustomerTest() throws Exception {
-        mockMvc.perform(delete("/api/v1/customers/1")).andExpect(status().isOk());
+        mockMvc.perform(delete("/api/v1/customers")).andExpect(status().isOk());
     }
 
     @Test

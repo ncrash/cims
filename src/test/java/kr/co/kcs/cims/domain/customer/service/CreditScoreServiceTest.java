@@ -32,6 +32,24 @@ class CreditScoreServiceTest {
     private CustomerRepository customerRepository;
 
     @Test
+    @DisplayName("신용등급이 없고 연체도 없고 모든 거래가 정상적으로 완료된 경우 기본 점수(7점)를 받는다")
+    void updateCreditScore_WithBasicGrade() {
+        // given
+        Customer customer = createCustomer(1L, null);
+        given(customerRepository.findById(1L)).willReturn(Optional.of(customer));
+        given(customerRepository.countDelayedByCustomerAndDateAfter(any(), any(), any()))
+                .willReturn(0);
+        given(customerRepository.sumTransactionAmountsByCustomer(any())).willReturn(BigDecimal.TEN);
+
+        // when
+        creditScoreService.updateCreditScore(1L);
+
+        // then
+        assertThat(customer.getCreditGrade()).isEqualTo(7);
+        verify(customerRepository).save(customer);
+    }
+
+    @Test
     @DisplayName("연체가 없는 경우 기본 점수(7점)를 받는다")
     void updateCreditScore_WithNoDelayed() {
         // given
@@ -72,6 +90,7 @@ class CreditScoreServiceTest {
     void updateCreditScore_WithThreeOrMoreDelayeds() {
         // given
         Customer customer = createCustomer(1L);
+        customer.updateCreditGrade(CreditGrade.GRADE_009);
         given(customerRepository.findById(1L)).willReturn(Optional.of(customer));
         given(customerRepository.countDelayedByCustomerAndDateAfter(any(), any(), any()))
                 .willReturn(3);

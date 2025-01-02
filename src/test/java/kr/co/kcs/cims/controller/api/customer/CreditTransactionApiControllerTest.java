@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -36,6 +37,7 @@ import kr.co.kcs.cims.domain.customer.dto.CreditTransactionDto;
 import kr.co.kcs.cims.domain.customer.dto.CreditTransactionDtoBuilder;
 import kr.co.kcs.cims.domain.customer.dto.CreditTransactionRequestDto;
 import kr.co.kcs.cims.domain.customer.dto.CreditTransactionRequestDtoBuilder;
+import kr.co.kcs.cims.domain.customer.dto.CustomerDtoBuilder;
 import kr.co.kcs.cims.domain.customer.enums.RepaymentStatus;
 import kr.co.kcs.cims.domain.customer.enums.TransactionType;
 import kr.co.kcs.cims.domain.customer.service.CreditTransactionService;
@@ -72,7 +74,6 @@ class CreditTransactionApiControllerTest {
                 .build();
 
         sampleRequestDto = CreditTransactionRequestDtoBuilder.builder()
-                .customerId(1L)
                 .type(TransactionType.CREDIT_CARD)
                 .amount(BigDecimal.valueOf(10000))
                 .status(RepaymentStatus.PENDING)
@@ -92,14 +93,15 @@ class CreditTransactionApiControllerTest {
 
     @Test
     @DisplayName("고객별 신용거래 목록 조회 테스트")
+    @WithMockUser(username = "user1")
     void getCustomerTransactionsTest() throws Exception {
         Page<CreditTransactionDto> page = new PageImpl<>(List.of(sampleDto));
         when(creditTransactionService.getTransactionsByCustomer(eq(1L), any(), any()))
                 .thenReturn(page);
+        when(customerCreditFacade.getCustomer(any()))
+                .thenReturn(CustomerDtoBuilder.builder().id(1L).build());
 
-        mockMvc.perform(get("/api/v1/transactions/customer/1")
-                        .param("page", "0")
-                        .param("size", "10"))
+        mockMvc.perform(get("/api/v1/transactions/customer").param("page", "0").param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].type").value(TransactionType.CREDIT_CARD.name()))
                 .andExpect(jsonPath("$.content[0].status").value(RepaymentStatus.PENDING.name()));
@@ -107,8 +109,11 @@ class CreditTransactionApiControllerTest {
 
     @Test
     @DisplayName("신용거래 등록 테스트")
+    @WithMockUser(username = "user1")
     void createTransactionTest() throws Exception {
-        when(customerCreditFacade.createTransaction(any())).thenReturn(sampleDto);
+        when(customerCreditFacade.createTransaction(any(), any())).thenReturn(sampleDto);
+        when(customerCreditFacade.getCustomer(any()))
+                .thenReturn(CustomerDtoBuilder.builder().id(1L).build());
 
         mockMvc.perform(post("/api/v1/transactions")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -119,26 +124,33 @@ class CreditTransactionApiControllerTest {
 
     @Test
     @DisplayName("신용거래 상태 수정 테스트")
+    @WithMockUser(username = "user1")
     void updateTransactionStatusTest() throws Exception {
         var updateSampleDto = sampleDto.withStatus(RepaymentStatus.PAID);
         when(customerCreditFacade.updateTransaction(eq(1L), eq(1L), eq(RepaymentStatus.PAID)))
                 .thenReturn(updateSampleDto);
+        when(customerCreditFacade.getCustomer(any()))
+                .thenReturn(CustomerDtoBuilder.builder().id(1L).build());
 
-        mockMvc.perform(patch("/api/v1/transactions/customer/1/transaction/1/status/PAID"))
+        mockMvc.perform(patch("/api/v1/transactions/transaction/1/status/PAID"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(RepaymentStatus.PAID.name()));
     }
 
     @Test
     @DisplayName("신용거래 삭제 테스트")
+    @WithMockUser(username = "user1")
     void deleteTransactionTest() throws Exception {
-        mockMvc.perform(delete("/api/v1/transactions/customer/1/transaction/1")).andExpect(status().isOk());
+        when(customerCreditFacade.getCustomer(any()))
+                .thenReturn(CustomerDtoBuilder.builder().id(1L).build());
+
+        mockMvc.perform(delete("/api/v1/transactions/1")).andExpect(status().isOk());
     }
 
     @Test
     @DisplayName("신용거래 등록 실패 테스트 - 잘못된 요청")
     void createTransactionFailTest() throws Exception {
-        when(customerCreditFacade.createTransaction(any())).thenThrow(new IllegalArgumentException("잘못된 요청"));
+        when(customerCreditFacade.createTransaction(any(), any())).thenThrow(new IllegalArgumentException("잘못된 요청"));
 
         CreditTransactionRequestDto badRequestDto =
                 CreditTransactionRequestDtoBuilder.builder().build();
@@ -151,13 +163,17 @@ class CreditTransactionApiControllerTest {
 
     @Test
     @DisplayName("존재하지 않는 거래 삭제 시도 테스트")
+    @WithMockUser(username = "user1")
     void deleteNonExistentTransactionTest() throws Exception {
+        when(customerCreditFacade.getCustomer(any()))
+                .thenReturn(CustomerDtoBuilder.builder().id(1L).build());
+
         doThrow(new IllegalArgumentException("존재하지 않는 거래"))
                 .when(customerCreditFacade)
                 .deleteTransaction(eq(1L), eq(999L));
 
-        assertThatThrownBy(() -> mockMvc.perform(delete("/api/v1/transactions/customer/1/transaction/999"))
-                        .andExpect(status().isBadRequest()))
+        assertThatThrownBy(() ->
+                        mockMvc.perform(delete("/api/v1/transactions/999")).andExpect(status().isBadRequest()))
                 .isInstanceOf(ServletException.class)
                 .hasCauseInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("신용거래 삭제 실패: 존재하지 않는 거래");

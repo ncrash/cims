@@ -30,7 +30,7 @@ class CreditGradeTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, 11, -1})
+    @ValueSource(ints = {11, -1})
     @DisplayName("findByGrade: 유효하지 않은 등급 번호로 조회시 예외가 발생한다")
     void findByGrade_ShouldThrowException_WhenGradeIsInvalid(int invalidGrade) {
         // when & then

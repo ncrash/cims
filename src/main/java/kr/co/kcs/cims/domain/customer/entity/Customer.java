@@ -31,7 +31,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @Entity
 @Table(
@@ -139,15 +141,19 @@ public class Customer extends AbstractEntity implements UserDetails {
             throw new IllegalArgumentException("신용등급은 한 번에 2단계까지만 상승할 수 있습니다.");
         }
 
-        // 한 번에 3단계 이상 하락 불가
-        if (this.creditGrade.getGradeNumber() - newGrade.getGradeNumber() > 3) {
-            throw new IllegalArgumentException("신용등급은 한 번에 3단계까지만 하락할 수 있습니다.");
+        // 한 번에 5단계 이상 하락 불가
+        // 10등급인 고객이 연체 3회 시 5등급으로 하락 케이스
+        if (this.creditGrade.getGradeNumber() - newGrade.getGradeNumber() > 5) {
+            throw new IllegalArgumentException("신용등급은 한 번에 5단계까지만 하락할 수 있습니다.");
         }
 
         // 최근 3개월 내 등급 변경이 있었다면 변경 불가
         if (this.creditGradeUpdatedAt != null
                 && this.creditGradeUpdatedAt.plusMonths(3).isAfter(LocalDateTime.now(clock))) {
-            throw new IllegalArgumentException("신용등급은 최근 변경일로부터 3개월이 지나야 재변경이 가능합니다.");
+            log.warn(
+                    "신용등급은 최근 변경일로부터 3개월이 지나야 재변경이 가능합니다. afterThreeMonths: {}, now: {}",
+                    creditGradeUpdatedAt.plusMonths(3),
+                    LocalDateTime.now(clock));
         }
     }
 }

@@ -77,8 +77,17 @@ CREATE DATABASE kcs DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 * http://localhost:8080/kcs/swagger.html - Swagger UI 페이지
 * http://localhost:8080/v3/api-docs - OpenAPI 스펙 JSON
 
+## API 테스트 케이스
+1. 고객 등록
+2. 로그인
+3. 고객상세 조회(신용등급 : null)
+4. 신용거래 입력(10만원 정상거래)
+5. 고객상세 조회(신용등급 : 7등급) 
+6. 신용거래 입력(5,500만원 정상거래)
+7. 고객상세 조회(신용등급 : 9등급)
+
 ## DB 구성
-* TODO DB 구성 업데이트 하기
+- ![db-diagram.jpg](docs/db-diagram.jpg)
 
 ## 개선포인트
 - [보안] 개인정보 암호화

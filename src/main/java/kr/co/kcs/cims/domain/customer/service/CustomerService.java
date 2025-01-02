@@ -2,6 +2,7 @@ package kr.co.kcs.cims.domain.customer.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class CustomerService {
     private final CustomerRepository customerRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public Page<CustomerDto> findCustomers(Pageable pageable) {
         Page<Customer> customers = customerRepository.findAll(pageable);
@@ -30,24 +32,33 @@ public class CustomerService {
 
     @Transactional
     public CustomerDto createCustomer(CustomerRequestDto request) {
-        Customer customer = request.toEntity();
+        String encodedPassword = passwordEncoder.encode(request.password());
+
+        Customer customer = request.toEntity(encodedPassword);
         Customer savedCustomer = customerRepository.save(customer);
         return CustomerDto.from(savedCustomer);
     }
 
     @Transactional
-    public CustomerDto updateCustomer(Long id, CustomerRequestDto request) {
-        Customer customer = getCustomer(id);
-        Customer updateRequestEntity = request.toEntity();
+    public CustomerDto updateCustomer(String username, CustomerRequestDto request) {
+        String encodedPassword = passwordEncoder.encode(request.password());
 
+        Customer customer = getCustomer(username);
+
+        if (!customer.getUsername().equals(request.username())) {
+            throw new IllegalArgumentException(
+                    "username은 변경할 수 없습니다. old: " + customer.getUsername() + ", new: " + request.username());
+        }
+
+        Customer updateRequestEntity = request.toEntity(encodedPassword);
         customer.updatePersonalInfo(updateRequestEntity.getPersonalInfo());
 
         return CustomerDto.from(customer);
     }
 
     @Transactional
-    public void deleteCustomer(Long id) {
-        Customer customer = getCustomer(id);
+    public void deleteCustomer(String username) {
+        Customer customer = getCustomer(username);
         customerRepository.delete(customer);
     }
 
@@ -55,5 +66,11 @@ public class CustomerService {
         return customerRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + id));
+    }
+
+    Customer getCustomer(String username) {
+        return customerRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Customer not found with username: " + username));
     }
 }

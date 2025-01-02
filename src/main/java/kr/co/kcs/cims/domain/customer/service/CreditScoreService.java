@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CreditScoreService {
 
     // 신용등급 최대값 (10점)
@@ -40,16 +41,16 @@ public class CreditScoreService {
                 .findById(customerId)
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found with id: " + customerId));
 
+        BigDecimal totalAmount = customerRepository.sumTransactionAmountsByCustomer(customer);
         int currentGrade = customer.getCreditGrade();
         int delayedCount = calculateDelayedCount(customer); // 연체 횟수에 따른 감점
-        int bonusPoints = calculateBonusPoints(customer); // 거래금액에 따른 가산점
+        int bonusPoints = calculateBonusPoints(totalAmount); // 거래금액에 따른 가산점
 
         // 최종 등급은 1보다 작을 수 없음
-        int newScore = calculateScore(currentGrade, delayedCount, bonusPoints);
-        CreditGrade creditGrade = CreditGrade.findByGrade(newScore);
+        int newScore = calculateScore(totalAmount, currentGrade, delayedCount, bonusPoints);
 
         // 고객 신용점수 업데이트
-        customer.updateCreditGrade(creditGrade);
+        customer.updateCreditGrade(CreditGrade.findByGrade(newScore));
         customerRepository.save(customer);
     }
 
@@ -60,7 +61,11 @@ public class CreditScoreService {
         return customerRepository.countDelayedByCustomerAndDateAfter(customer, oneYearAgo, RepaymentStatus.DELAYED);
     }
 
-    private int calculateScore(int currentGrade, int delayedCount, int bonusPoints) {
+    private int calculateScore(BigDecimal totalAmount, int currentGrade, int delayedCount, int bonusPoints) {
+        if (totalAmount.compareTo(BigDecimal.ZERO) > 0 && currentGrade == 0 && delayedCount == 0) {
+            return BASE_SCORE;
+        }
+
         // 3회 이상 연체: 5등급 이상은 5등급으로 강등하며, 5등급 이하인 경우에는 그대로 유지한다.
         if (delayedCount >= 3) {
             return Math.min(currentGrade, MID_SCORE);
@@ -75,13 +80,12 @@ public class CreditScoreService {
         return Math.min(MAX_SCORE, Math.max(MIN_SCORE, currentGrade + deductPoints + bonusPoints));
     }
 
-    private int calculateBonusPoints(Customer customer) {
-        BigDecimal totalAmount = customerRepository.sumTransactionAmountsByCustomer(customer);
+    private int calculateBonusPoints(BigDecimal totalAmount) {
 
         // 거래금액에 따른 가산점 로직
-        if (totalAmount.compareTo(new BigDecimal("100000000")) > 0) { // 1억 이상
+        if (totalAmount.compareTo(BigDecimal.valueOf(100_000_000L)) > 0) { // 1억 이상
             return 2;
-        } else if (totalAmount.compareTo(new BigDecimal("50000000")) > 0) { // 5천만원 이상
+        } else if (totalAmount.compareTo(BigDecimal.valueOf(50_000_000L)) > 0) { // 5천만원 이상
             return 1;
         }
         return 0;

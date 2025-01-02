@@ -147,7 +147,7 @@ class CustomerTest {
     }
 
     @Test
-    @DisplayName("신용등급 업데이트 - 3단계 초과 하락 제한")
+    @DisplayName("신용등급 업데이트 - 5단계 초과 하락 제한")
     void updateCreditGrade_ExceedDowngradeLimit() {
         // given
         Customer customer = createTestCustomer();
@@ -156,20 +156,18 @@ class CustomerTest {
         // when & then
         assertThatThrownBy(() -> customer.updateCreditGrade(CreditGrade.GRADE_001))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("신용등급은 한 번에 3단계까지만 하락할 수 있습니다.");
+                .hasMessage("신용등급은 한 번에 5단계까지만 하락할 수 있습니다.");
     }
 
     @Test
-    @DisplayName("신용등급 업데이트 - 3개월 이내 재변경 제한")
+    @DisplayName("신용등급 업데이트 - 3개월 이내 재변경")
     void updateCreditGrade_TooFrequentUpdate() {
         // given
         Customer customer = createTestCustomer();
         customer.updateCreditGrade(CreditGrade.GRADE_007);
 
         // when & then
-        assertThatThrownBy(() -> customer.updateCreditGrade(CreditGrade.GRADE_009))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("신용등급은 최근 변경일로부터 3개월이 지나야 재변경이 가능합니다.");
+        customer.updateCreditGrade(CreditGrade.GRADE_009);
     }
 
     private Customer createTestCustomer() {

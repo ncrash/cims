@@ -21,6 +21,10 @@ public enum CreditGrade {
     }
 
     public static CreditGrade findByGrade(int grade) {
+        if (grade == 0) {
+            return null;
+        }
+
         if (grade > 10 || grade < 1) {
             throw new IllegalArgumentException("Grade must be between 1 and 10 : " + grade);
         }
