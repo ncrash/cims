@@ -77,7 +77,8 @@ CREATE DATABASE kcs DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 * http://localhost:8080/kcs/swagger.html - Swagger UI 페이지
 * http://localhost:8080/v3/api-docs - OpenAPI 스펙 JSON
 
-## API 테스트 케이스
+### API 테스트 케이스
+[credit-grade-calc-logic.md - 테스트 시나리오](docs/analysis-requirements/credit-grade-calc-logic.md)
 1. 고객 등록
 2. 로그인
 3. 고객상세 조회(신용등급 : null)
